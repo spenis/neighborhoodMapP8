@@ -48,14 +48,6 @@ class App extends Component {
     });
 
 
-  toggleBounce = () => {
-	if (this.marker.getAnimation() !== null) {
-	  this.marker.setAnimation(null);
-	} else {
-	  this.marker.setAnimation(window.google.maps.Animation.BOUNCE);
-	  }
-	}
-
 
     //infowindow
     var infowindow = new window.google.maps.InfoWindow()
@@ -70,9 +62,9 @@ class App extends Component {
 		map: map,
 		title: myLocation.venue.name,
 		draggable: true,
-		animation:  window.google.maps.Animation.DROP
+		animation:  window.google.maps.Animation.BOUNCE
       });
-      marker.addListener('click', this.toggleBounce);
+      
       
 
       
