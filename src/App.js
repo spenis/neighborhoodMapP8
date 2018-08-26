@@ -36,7 +36,7 @@ class App extends Component {
       }, this.loadMap())
     })
     .catch(error => {
-      console.log("ERROR " + error)
+      alert('Error downloading the map!')
     })
   }
 
@@ -46,6 +46,16 @@ class App extends Component {
       center: {lat:37.983810 , lng:23.727539 },  
       zoom: 8
     });
+
+
+  toggleBounce = () => {
+	if (this.marker.getAnimation() !== null) {
+	  this.marker.setAnimation(null);
+	} else {
+	  this.marker.setAnimation(window.google.maps.Animation.BOUNCE);
+	  }
+	}
+
 
     //infowindow
     var infowindow = new window.google.maps.InfoWindow()
@@ -58,8 +68,13 @@ class App extends Component {
 	  var marker = new window.google.maps.Marker({
 		position: {lat:myLocation.venue.location.lat , lng:myLocation.venue.location.lng },
 		map: map,
-		title: myLocation.venue.name
+		title: myLocation.venue.name,
+		draggable: true,
+		animation:  window.google.maps.Animation.DROP
       });
+      marker.addListener('click', this.toggleBounce);
+      
+
       
       //when clicked open a window with info
       marker.addListener('click', function() {
@@ -74,10 +89,13 @@ class App extends Component {
 
   }
 
+
+
+
   render() {
     return (
       <main>
-        <div id="map"></div>  
+        <div id="map" role="container"></div>  
       </main>
       
     );
@@ -94,6 +112,9 @@ function loadScript(url) {
   script.async = true
   script.defer = true
   index.parentNode.insertBefore(script, index)
+  script.onerror = () => {
+  alert('Error downloading the map!');
+  }
 }
 
 export default App;
