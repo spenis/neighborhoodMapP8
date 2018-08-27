@@ -21,24 +21,24 @@ Production Mode
 
 ## Load App in Developement mode
 
-  https://github.com/spenis/neighborhoodMapP8.git
+  `https://github.com/spenis/neighborhoodMapP8.git`
     Download or Clone the Repository.
   
-  npm start
-    Starts the server. A new browser window should automatically open displaying the app. If it doesn't, navigate to http://localhost:3000/ in your browser.
+  `npm start`
+    `Starts the server. A new browser window should automatically open displaying the app. If it doesn't, navigate to http://localhost:3000/ in your browser.`
 
-  npm run build
-    Bundles the app into static files for production.
+  `npm run build`
+    `Bundles the app into static files for production.`
 
   npm test
-    Starts the test runner.
+    `Starts the test runner.`
 
   npm run eject
-    Removes this tool and copies build dependencies, configuration files
-    and scripts into the app directory. If you do this, you can’t go back!
+    `Removes this tool and copies build dependencies, configuration files
+    and scripts into the app directory. If you do this, you can’t go back!`
 
 install dependancy of axios
-  npm install axios
+  `npm install axios`
 
 ## Loading the App in Production Mode
 

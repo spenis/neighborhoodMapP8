@@ -29,6 +29,10 @@
 
 #map {
 	height: 100vh;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+   
 }
 
 html, body {
@@ -36,3 +40,40 @@ html, body {
 	margin: 0;
 	padding: 0;
 }
+
+@media screen  and (max-width: 850px) {
+    .App-header{
+       width: 15%;
+       font-size: 10px;
+    }
+
+    ul li {
+       padding: 1px 3px;
+       margin: 2px 1px;
+    }
+
+    
+} 
+
+@media screen  and (max-width: 850px) {
+    .App-header{
+       height: 140px;
+       margin-top: 100px;
+       overflow: hidden;
+       overflow-y: scroll;
+    }
+
+    .App-header h1, .App-header input  {
+          font-size: 12px;
+    }
+
+    .App-logo, .App-header h2 {
+      display: none;
+    }
+
+    ul li {
+        margin: 2px 0 ;
+        padding: 1px 0;
+        height: 20px;
+    }
+} 
