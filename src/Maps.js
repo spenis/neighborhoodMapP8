@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { withGoogleMap, GoogleMap } from 'react-google-maps';
 import Markers from './Marker.js';
 import InfoWindow from './InfoWindow.js';
@@ -15,8 +15,8 @@ class Map extends React.Component {
       super(props);
       this.state = { position: {
 
-      lat: this.lat,
-      lng: this.lng
+//      lat: this.lat,
+//      lng: this.lng
       
       }
     }
@@ -26,10 +26,10 @@ class Map extends React.Component {
 
 	loadMap() {
 	  if (this.props && this.props.google) {
-	    const{lat,lng} = this.state.position;
-	    const {google} = this.props;
-	    const maps = window.google.maps;
-	    const mapRef = this.refs.map;
+//	    const{lat,lng} = this.state.position;
+//	    const {google} = this.props;
+//	    const maps = window.google.maps;
+//	    const mapRef = this.refs.map;
 	    }
 	}
 

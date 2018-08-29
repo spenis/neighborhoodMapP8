@@ -1,6 +1,6 @@
 import React from 'react';
 //import sortBy from 'sort-by';
-import PropTypes from 'prop-types';
+
 
 class SearchBar extends React.Component {
   static propTypes = {

@@ -9,7 +9,8 @@ import ListView from './ListView.js';
 import Header from './Header.js';
 import './App.css';
 import { withGoogleMap } from 'react-google-maps';
-import mapStyles from './mapStyles.js';
+import { mapStyles } from './mapStyles.js';
+import logo from './logo2.png'
 
 
 
@@ -49,13 +50,15 @@ class App extends Component {
     });
   }
 
-  	initMap = () => {
-	  //create the map
-	  var map = new window.google.maps.Map(document.getElementById('map'), {
-	    center: {lat:37.983810 , lng:23.727539 },  
-	    zoom: 15,
-	    styles: mapStyles
-	});}
+  initMap = () => {
+    //create the map
+    var map = new window.google.maps.Map(document.getElementById('map'), {
+    center: {lat:37.983810 , lng:23.727539 },  
+    zoom: 15,
+    styles: {mapStyles}
+  });}
+
+
   updateSearch(event) {
    	this.setState({search: event.target.value.substr(0,20)});
   }
@@ -78,6 +81,10 @@ class App extends Component {
   //load venue data   
   componentDidMount () {
    this.getVenues()
+   // When Google Maps API fails >> alert
+   window.gm_authFailure = () => {
+   alert("Error loading Google Maps, Please Check The API Key!");
+  };
   }
  
   //when I click a marker 
@@ -86,7 +93,7 @@ class App extends Component {
 
       activeMarker: marker,
       selectedPlace: props,
-      icon: defaultIcon,
+      icon: logo,
       showingInfoWindow: true,
       
      });
@@ -97,9 +104,10 @@ class App extends Component {
     if (this.state.showingInfoWindow) {
       this.setState({
         
-        showingInfoWindow: false,
-        icon: defaultIcon,
+        activeMarker: null,
         selectedPlace: props,
+        icon: defaultIcon,
+        showingInfoWindow: false,
         
       })
     }
@@ -127,6 +135,12 @@ class App extends Component {
 	//	near: "Athens",
 	//	v: "20180815"
 	//}
+
+  gm_authFailure = () => {
+  	
+  	alert(`Google Maps API - could not loaded!`); 
+
+  }	
 
 
   InfoWindowOff= (props) => {
@@ -171,6 +185,7 @@ class App extends Component {
             this.setState({ searchVenue: [] })
         }
     }
+
   
   render() {
        
