@@ -1,183 +1,293 @@
 import React, { Component } from 'react';
-import './App.css';
-import './index.css';
-import axios from 'axios';
-//import SearchBox from 'react-google-maps/lib/places/SearchBox';
-//import ham from './ham.svg';
-import ListView from './ListView.js';
+import defaultIcon from './icons8-marker-32.png';
+import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
+import * as maps from './Maps.js';
 import SearchBar from './SearchBar.js';
-//import ReactDOM from 'react-dom';
-import logo from './logo.svg';
-import Map from './Maps.js';
 //import Marker from "react-google-maps";
-//import { withGoogleMap } from 'react-google-maps';
-import { mapStyles } from './mapStyles.js';
+import ReactDOM from 'react-dom';
+import ListView from './ListView.js';
+import Header from './Header.js';
+import './App.css';
+import { withGoogleMap } from 'react-google-maps';
+import mapStyles from './mapStyles.js';
+
 
 
 class App extends Component {
+  
   constructor(props) {
-  super(props);
-  this.state = {
-         map: [],
-         marker: [], 
-         showingPlaces: [],
-         data: [],
-         query: '',
-         venues: [],
-       	 infoContent: "", 
-       }
+    super(props);
+    this.markerMount = this.markerMount.bind(this);
+    this.onMapClicked = this.onMapClicked.bind(this);
+    this.state = { error: null, errorInfo: null };
+    this.state = {
+      showingInfoWindow: false,
+      map: [],
+      selectedPlace: "",
+      activeMarker: {},
+      venues: [], 
+      success: false,
+      data: [],
+      infoContent: "",     
+      infoLoaded: true,
+      query: "",
+      searchVenue: [],
+      markerfl: null,
+      hasError: false
+    };
   }
 
   componentDidUpdate() {
   }
 
-  state = {
-    venues: [],
-    query: '',
-    infoContent: "",
-    map: [],
-    marker: []
-}
-  updateSearch(event) {
-   	this.setState({search: event.target.value.substr(0,20)});
+  //Error Handling tips from https://medium.com/@leonardobrunolima/react-tips-error-handling-d6ca2171dd46
+  componentDidCatch(error, errorInfo) {
+    console.log("An error occured " + error);
+    this.setState({ 
+      error: error,
+      errorInfo: errorInfo
+    });
   }
 
-
-  componentDidMount() {
-    this.getLocations()  	
-  }
-
-  loadMap = () => {
-    loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyB44RGKJB9FKFF5kfBJQfjxD1KGxdCkaYs&callback=initMap")
-    window.initMap = this.initMap
-  }
-
-	getLocations = () => {
-		const endPoint = "https://api.foursquare.com/v2/venues/explore?"
-		const parameters = {
-		client_id: "FTMNUGF4LCQEN1QMBIQI31GOSN1QRIBHV1P1BNVDOWB12J5G",
-		client_secret: "HLK4RJGME4QTPEPTISXWMLUXUC230ACT4JFZ3YFNXVDTZ1OM",
-		query: "coffee",
-		near: "Athens",
-		v: "20180815"
-	}
- 
-
-	axios.get(endPoint + new URLSearchParams(parameters))
-	  .then(response => {
-	    this.setState({
-	   	locations: response.data.response.groups[0].items	
-	    }, this.loadMap())
-	  })
-	  .catch(error => {
-	    alert('Error downloading the map!' + error)
-	 })
-	}
-
-	addMarker = (data) => {
-     new window.google.maps.Marker({
-        position: new window.google.maps.LatLng(data.lat, data.lng),
-        
-     });
-    }
-
-
-	//update state function
-	updateQuery = (query)=>{
-	  this.setState({query: query})
-	}
-
-	//a reset function
-	clearQuery = ()=>{
-	  this.setState({query: '' })
-	}
-    
-
-	initMap = () => {
+  	initMap = () => {
 	  //create the map
 	  var map = new window.google.maps.Map(document.getElementById('map'), {
 	    center: {lat:37.983810 , lng:23.727539 },  
 	    zoom: 15,
 	    styles: mapStyles
-	});
+	});}
+  updateSearch(event) {
+   	this.setState({search: event.target.value.substr(0,20)});
+  }
+
+  //Venue from foursquare & error handling
+  getVenues() {
+        maps.getVenuesAll()
+        .then(venues => {
+        this.setState({ venues: venues })       
+          
+  })
+        .catch(error => this.componentDidCatch(error, error.toString()))
+  }  
+
+//  loadMap = () => {
+//    loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyB44RGKJB9FKFF5kfBJQfjxD1KGxdCkaYs&callback=initMap")
+//    window.initMap = this.initMap
+//  }
+
+  //load venue data   
+  componentDidMount () {
+   this.getVenues()
+  }
+ 
+  //when I click a marker 
+  markerMount(props, marker, e) {
+    this.setState({
+
+      activeMarker: marker,
+      selectedPlace: props,
+      icon: defaultIcon,
+      showingInfoWindow: true,
+      
+     });
+  };
+
+  //map
+  onMapClicked = (props) => {
+    if (this.state.showingInfoWindow) {
+      this.setState({
+        
+        showingInfoWindow: false,
+        icon: defaultIcon,
+        selectedPlace: props,
+        
+      })
+    }
+  };
+
+  //list
+  listMount(props, marker, e) {
+    this.setState({
+
+      activeMarker: marker,
+      selectedPlace: props,
+      icon: defaultIcon,
+      showingInfoWindow: true,
+      
+     });
+  };
 
 
-	//infowindow
-	var infowindow = new window.google.maps.InfoWindow()
-
-	  this.state.locations.map(myLocation => {
-	    var contentString = `${myLocation.venue.name}`;
-	    
-	    //when clicked open a window with info
-	    marker.addListener('click', function() {
-	      //every click change the info content
-	      infowindow.setContent(contentString)
-	      //open
-	      infowindow.open(map, marker);
-
-	    //marker
-	    var marker = new window.google.maps.Marker({
-		  position: {lat:myLocation.venue.location.lat , lng:myLocation.venue.location.lng },
-		  map: map,
-		  title: myLocation.venue.name,
-		  draggable: true,
-		  animation:  window.google.maps.Animation.DROP
-	    });
-	    //animation from https://developers.google.com
-        if(marker.getAnimation() !== null) {
-            marker.setAnimation(null) ;
-            } else {
-            marker.setAnimation(window.google.maps.Animation.BOUNCE);
-            }
-	  })
-	    });
+	//getLocations = () => {
+	//	const endPoint = "https://api.foursquare.com/v2/venues/explore?"
+	//	const parameters = {
+	//	client_id: "FTMNUGF4LCQEN1QMBIQI31GOSN1QRIBHV1P1BNVDOWB12J5G",
+	//	client_secret: "HLK4RJGME4QTPEPTISXWMLUXUC230ACT4JFZ3YFNXVDTZ1OM",
+	//	query: "coffee",
+	//	near: "Athens",
+	//	v: "20180815"
+	//}
 
 
+  InfoWindowOff= (props) => {
+    if (this.state.showingInfoWindow) {
+      
+      this.setState({
 
-	}
+       showingInfoWindow: false,
+       icon: defaultIcon
+      
+      })
+    }
+  };
 
+  // Update locations list
+  updateQuery = (query) => {
+    
+    this.setState({ query: query })
+     this.setState({
+    
+        showingInfoWindow: false,
+        icon: defaultIcon,
 
+      })
+    this.updateVenues(query)   
+  }
 
-	render() {
-	    return (
-	      <main className="App" role="Container">
-	          <div className="App-header" id="app-header">
-	              <img src={logo} className="App-logo" alt="logo" />
-	              <h1>Athens is the new Berlin</h1>
-	              <h2 className="App-title">Neighborhood Map Project 8</h2>
-	                <SearchBar/>
-	             
-	                <ListView/>
-	                
-	          </div>
-	          <Map id="map"
-	              infoContent={this.state.infoContent}/>
-	      </main>
-	    );
+  //update venues
+  updateVenues = (query) => {
+
+        if (query) {
+            maps.select(query).then((searchVenue) => {
+
+                    this.setState({ searchVenue: searchVenue })
+                    this.setState({ venues: searchVenue })
+                    
+               
+            })
+            .catch(error => this.componentDidCatch(error, error.toString()))
+
+        } else {
+            this.setState({ searchVenue: [] })
+        }
+    }
+  
+  render() {
+       
+      if (this.state.errorInfo) {
+      // Error path
+      return (
+        <div>
+          <h2>Something went wrong.</h2>
+          <h3>                     
+            {this.state.error.stack}
+          </h3>
+        </div>
+      );
+    }
+     
+     return (
+     
+  // HTML content    
+  <div className="mainContainer">
+  <header className="header"><Header/></header>
+    <article className="main">
+    
+    { (
+            
+          
+          <Map 
+          google={this.props.google}
+          onClick={this.onMapClicked}
+          initialCenter={{
+          lat: 37.983810,
+          lng: 23.727539 
+          }}
+          zoom={18}
+        >
+        
+     {this.state.venues.map(myMarker =>
+        <Marker 
+          ondomready={this.listMount}
+          key={myMarker.id}
+          id={myMarker.id}
+          onClick={this.markerMount}
+          icon={this.state.selectedPlace.id === myMarker.id ? this.state.icon : defaultIcon }
+          position={myMarker.location}
+          title={myMarker.title}
+          name={myMarker.name} 
+          animation={this.state.activeMarker ? (this.state.selectedPlace.id === myMarker.id ? '1' : '0') : '0'}
+
+        > 
+        </Marker>
+      )} 
+      
+        <InfoWindow 
+
+          marker={this.state.activeMarker}
+          visible={this.state.showingInfoWindow}         
+          position={this.state.selectedPlace.location}
+          onClose={this.InfoWindowOff}
+        >
+           <div key={this.state.selectedPlace.id}>                    
+           <h1> {this.state.selectedPlace.name} </h1>
+          {this.state.venues.map(info =>            
+           <div key={info.id}> 
+           <p>{this.state.selectedPlace.id === info.id ?info.location.address : ''} </p>
+           <p>{this.state.selectedPlace.id === info.id ?info.location.crossStreet : ''} </p>
+           </div>  
+        )}
+            </div>
+        </InfoWindow>       
+
+      </Map>
+       )}
+    
+  </article>
+  <aside className="aside">
+        <h1>Find places on the map</h1>
+  
+        <div className="input-mainContainer">
+          <input
+            type="text"
+            placeholder="Search here"
+            aria-label="search"
+            onChange={e => this.updateQuery(e.target.value)}
+          />
+        </div>
+      <div>
+        <ul className="list-query" tabIndex="0">
+          {
+        
+        this.state.venues.map(place =>
+              <li 
+               
+                key={place.id}
+                className="result-item"
+                tabIndex="0"
+                id={place.id}                
+               
+                onClick={e => this.listMount(
+                	place, this.marker, e)}>
+
+                {place.name}
+          
+              </li>
+
+            )
+          }
+        </ul>
+        
+      </div>
+    
+      </aside>
+
+  
+  </div>
+
+    );
   }
 }
 
-
-
-
-function loadScript(url) {
-  var index = 
-  window.document.getElementsByTagName("script")[0]	
-
-  var script =
-  window.document.createElement("script")
-  script.src = url
-  script.async = true
-  script.defer = true
-  index.parentNode.insertBefore(script, index)
-  script.onerror = () => {
-  alert('Error downloading the map!');
-  }
-}
-
-
-
-
-
-
-export default App;
+    
+export default GoogleApiWrapper({apiKey: "AIzaSyB44RGKJB9FKFF5kfBJQfjxD1KGxdCkaYs"})(App);

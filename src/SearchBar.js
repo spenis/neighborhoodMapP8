@@ -1,20 +1,31 @@
 import React from 'react';
+//import sortBy from 'sort-by';
+import PropTypes from 'prop-types';
 
 class SearchBar extends React.Component {
+  static propTypes = {
+	}
 
-	render() {
+	state = {
+		query: '',
+		locationsSearchResult: []
+	}
 
-		return (
-			 
-			<div className='search-filter' tabIndex='0'>
-		            <input
-		                type='text'
-		                placeholder='Search'
-		                aria-label = "Enter location"
+	updateQuery = (query) => {
+		this.setState({
+			query: query
+	})
+}
+  render() {
 
-		            />
-            
-          	</div>
+    return (
+      <div className='search-filter' tabIndex='0'>
+	    <input
+	    type='text'
+	    placeholder='Search'
+	    aria-label = "Enter location"
+        />
+       	</div>
 		)
 	}
 }

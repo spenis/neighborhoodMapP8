@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 class ListView extends React.Component {
 	render() {
-		//var list = this.props.list;
+		var ListView = this.props.ListView;
 		return (
 
 		<ul>

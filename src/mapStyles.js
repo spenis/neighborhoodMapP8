@@ -36,3 +36,5 @@ export const mapStyles = [{
     "color": "#737373"
   }]
 }]
+
+export default mapStyles;

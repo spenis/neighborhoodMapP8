@@ -28,7 +28,8 @@
 }
 
 #map {
-	height: 100vh;
+
+	height: 100%;
     padding: 0;
     margin: 0;
     width: 100%;
@@ -40,6 +41,85 @@ html, body {
 	margin: 0;
 	padding: 0;
 }
+
+h1 {
+	background-color: #e6e6ff;
+	font-weight: bold;
+	display: flex;
+
+}
+
+.mainContainer {
+  display: flex;  
+  flex-flow: row wrap;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+  flex: 1 100%;
+  
+}
+
+.mainContainer > * {
+  
+  padding: 10px;
+  flex: 1 100%;
+}
+
+.input-mainContainer input {
+  
+  height: 100%;
+  width: 90%;
+  line-height: 30px;
+  padding: 1em;
+  font-size: 15px;
+}
+
+.container {
+  height: 100vh;
+
+}
+
+.header {
+  padding: 12px 0 5px 0;
+  text-align: center;
+  background-color: #e1e5ed;
+  font-size: 25px;
+}
+
+
+.main {
+  text-align: right;
+  position: relative; 
+  overflow: hidden;
+  min-height: 600px;
+  padding: 0 0 0 0;
+
+ 
+}
+.aside {
+  max-width: 350px;
+  float: right;
+}
+
+.input-mainContainer {
+  height: 15px;
+} 
+
+.list-query {
+  list-style: none;
+  padding: 0.5em;
+  background-color: #e1e5ed;
+  float:right;
+}
+
+.list-query .result-item {
+  font-size: 25px;
+  padding: 0.5em;
+  border-bottom: 1px solid #b0bec5;
+  cursor: pointer;
+  float:right;
+}
+
 
 @media screen  and (max-width: 850px) {
     .App-header{
@@ -63,6 +143,11 @@ html, body {
        overflow-y: scroll;
     }
 
+    .aside { 
+    	flex: 1 auto; 
+    	max-width: 800px;
+    }
+
     .App-header h1, .App-header input  {
           font-size: 12px;
     }
@@ -77,3 +162,10 @@ html, body {
         height: 20px;
     }
 } 
+
+
+
+@media all and (min-width: 800px) {
+  .main    { flex: 3 3px; }
+
+}
