@@ -20,7 +20,7 @@ renderMarker() {
         position: position
       };
       this.marker = new window.google.maps.Marker(pref);
-
+      
     
   }
 	 

@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import defaultIcon from './icons8-marker-32.png';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import * as maps from './Maps.js';
-import SearchBar from './SearchBar.js';
+//import SearchBar from './SearchBar.js';
 //import Marker from "react-google-maps";
-import ReactDOM from 'react-dom';
-import ListView from './ListView.js';
+//import ReactDOM from 'react-dom';
+//import ListView from './ListView.js';
 import Header from './Header.js';
 import './App.css';
-import { withGoogleMap } from 'react-google-maps';
+//import { withGoogleMap } from 'react-google-maps';
 import { mapStyles } from './mapStyles.js';
 import logo from './logo2.png'
 
@@ -34,7 +34,7 @@ class App extends Component {
       query: "",
       searchVenue: [],
       markerfl: null,
-      hasError: false
+      hasError: false,
     };
   }
 
@@ -56,8 +56,10 @@ class App extends Component {
     center: {lat:37.983810 , lng:23.727539 },  
     zoom: 15,
     styles: {mapStyles}
-  });}
+  });
+}
 
+  
 
   updateSearch(event) {
    	this.setState({search: event.target.value.substr(0,20)});
@@ -87,6 +89,7 @@ class App extends Component {
   };
   }
  
+
   //when I click a marker 
   markerMount(props, marker, e) {
     this.setState({
@@ -95,6 +98,7 @@ class App extends Component {
       selectedPlace: props,
       icon: logo,
       showingInfoWindow: true,
+	  
       
      });
   };
@@ -119,8 +123,9 @@ class App extends Component {
 
       activeMarker: marker,
       selectedPlace: props,
-      icon: defaultIcon,
+      icon: logo,
       showingInfoWindow: true,
+      
       
      });
   };
@@ -232,6 +237,7 @@ class App extends Component {
           title={myMarker.title}
           name={myMarker.name} 
           animation={this.state.activeMarker ? (this.state.selectedPlace.id === myMarker.id ? '1' : '0') : '0'}
+
 
         > 
         </Marker>
